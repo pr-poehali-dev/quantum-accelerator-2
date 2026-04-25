@@ -19,6 +19,28 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const formatLastSeen = (date: Date): string => {
+  const now = new Date();
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const time = `${hours}:${minutes}`;
+
+  if (isToday) {
+    return `Была в ${time}`;
+  }
+
+  const months = [
+    "января", "февраля", "марта", "апреля", "мая", "июня",
+    "июля", "августа", "сентября", "октября", "ноября", "декабря",
+  ];
+  return `Был(а) ${date.getDate()} ${months[date.getMonth()]} в ${time}`;
+};
+
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -310,8 +332,10 @@ const Index = () => {
                             <div className="text-[#dcddde] text-xs sm:text-sm mb-1">Работаю над логотипом</div>
                             <div className="text-[#b9bbbe] text-xs sm:text-sm mb-2">Figma Desktop</div>
                             <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 bg-[#3ba55c] rounded-full animate-pulse"></div>
-                              <span className="text-[#3ba55c] text-xs font-medium">0:37 прошло</span>
+                              <Clock className="w-3 h-3 text-[#b9bbbe]" />
+                              <span className="text-[#b9bbbe] text-xs font-medium">
+                                {formatLastSeen(new Date(Date.now() - 17 * 60 * 1000))}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -440,12 +464,22 @@ const Index = () => {
                 {[
                   {
                     name: "Мария Дизайнер",
-                    status: "Работает в Figma",
+                    status: formatLastSeen(new Date(Date.now() - 17 * 60 * 1000)),
                     avatar: "М",
                     color: "from-purple-500 to-pink-500",
                   },
-                  { name: "Иван UX", status: "В сети", avatar: "И", color: "from-green-500 to-blue-500" },
-                  { name: "Алексей", status: "Разрабатывает Дискордик", avatar: "А", color: "from-blue-500 to-purple-500" },
+                  {
+                    name: "Иван UX",
+                    status: formatLastSeen(new Date(new Date().setHours(9, 30, 0, 0))),
+                    avatar: "И",
+                    color: "from-green-500 to-blue-500",
+                  },
+                  {
+                    name: "Алексей",
+                    status: formatLastSeen(new Date(Date.now() - 3 * 60 * 1000)),
+                    avatar: "А",
+                    color: "from-blue-500 to-purple-500",
+                  },
                 ].map((user, index) => (
                   <div key={index} className="flex items-center gap-3 p-2 rounded hover:bg-[#36393f] cursor-pointer">
                     <div
